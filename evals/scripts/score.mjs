@@ -94,6 +94,29 @@ export function score(expected, output) {
   };
 }
 
+function verdicts(output) {
+  const m = new Map();
+  for (const f of output.files) {
+    m.set(f.path, f.verdict);
+    for (const c of f.checks.filter((c) => c.applicable)) m.set(`${f.path}#${c.checkId}`, c.verdict);
+  }
+  return m;
+}
+
+// 同じ質問版の 2 回の scan で、判定がどれだけそろうか。確率の揺れが判定を反転させる度合いを見る。
+export function agreement(a, b) {
+  const va = verdicts(a),
+    vb = verdicts(b);
+  const n = { files: 0, filesSame: 0, checks: 0, checksSame: 0 };
+  for (const [k, v] of va) {
+    if (!vb.has(k)) continue;
+    const kind = k.includes('#') ? 'checks' : 'files';
+    n[kind]++;
+    if (vb.get(k) === v) n[`${kind}Same`]++;
+  }
+  return { files: div(n.filesSame, n.files), checks: div(n.checksSame, n.checks) };
+}
+
 const fmt = (x) => (x === null || x === undefined ? '  -  ' : (x * 100).toFixed(0).padStart(4) + '%');
 const pad = (n, w = 3) => String(n).padStart(w);
 
@@ -105,9 +128,10 @@ function resultFiles(dir, subset, which) {
   return which === 'all' ? all : [which];
 }
 
-function print(name, subset, meta, output, s) {
+function print(name, subset, meta, output, s, agree) {
+  const vsR1 = agree ? ` sameAsR1(files=${fmt(agree.files)} checks=${fmt(agree.checks)})` : '';
   console.log(
-    `\n== ${name}/${subset} ${meta.questionVersion} r${meta.run} (${meta.jeviewsCommit})  files=${s.files} covered=${s.covered} coveredAccuracy=${fmt(s.coveredAccuracy)} known=${s.known} fileAccuracy=${fmt(s.fileAccuracy)} needReview=${fmt(s.needReviewRate)} usd=${output.run.usage.costUsd}`,
+    `\n== ${name}/${subset} ${meta.questionVersion} r${meta.run} (${meta.jeviewsCommit})  files=${s.files} covered=${s.covered} coveredAccuracy=${fmt(s.coveredAccuracy)} known=${s.known} fileAccuracy=${fmt(s.fileAccuracy)} needReview=${fmt(s.needReviewRate)}${vsR1} usd=${output.run.usage.costUsd}`,
   );
   console.log('  check                      tp  fp  fn  tn abst  prec  rec   acc');
   for (const [k, p] of Object.entries(s.checks).sort())
@@ -116,7 +140,7 @@ function print(name, subset, meta, output, s) {
     );
 }
 
-function record(name, subset, meta, rf, output, s) {
+function record(name, subset, meta, rf, output, s, agree) {
   const checks = Object.fromEntries(
     Object.entries(s.checks).map(([k, p]) => [k, { tp: p.tp, fp: p.fp, fn: p.fn, tn: p.tn, abstain: p.abstain }]),
   );
@@ -132,6 +156,7 @@ function record(name, subset, meta, rf, output, s) {
     known: s.known,
     fileAccuracy: s.fileAccuracy,
     needReviewRate: s.needReviewRate,
+    ...(agree ? { sameAsR1: agree } : {}),
     checks,
   };
   appendFileSync(join(EVALS, 'history.jsonl'), JSON.stringify(row) + '\n');
@@ -149,6 +174,12 @@ function loadExpected(name, subset) {
   return expected;
 }
 
+function againstFirstRun(dir, subset, meta, output) {
+  if (meta.run === 1) return null;
+  const first = readJson(join(dir, `${subset}.${meta.questionVersion}.r1.json`), null);
+  return first ? agreement(first.output, output) : null;
+}
+
 function main() {
   const { name, subset, which, mode } = parseArgs(process.argv.slice(2));
   const dir = join(evalDir(name), 'results');
@@ -156,8 +187,9 @@ function main() {
   for (const rf of resultFiles(dir, subset, which)) {
     const { meta, output } = readJson(join(dir, rf));
     const s = score(expected, output);
-    print(name, subset, meta, output, s);
-    if (mode === 'record') record(name, subset, meta, rf, output, s);
+    const agree = againstFirstRun(dir, subset, meta, output);
+    print(name, subset, meta, output, s, agree);
+    if (mode === 'record') record(name, subset, meta, rf, output, s, agree);
   }
 }
 

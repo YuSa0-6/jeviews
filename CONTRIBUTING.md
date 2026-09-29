@@ -21,6 +21,7 @@ pnpm install
 cp .env.example .env.local     # TypeSafe / Vercel AI Gateway / OpenRouter のキーを 1 つ
 pnpm test                      # 単体テスト（API は叩きません）
 pnpm run typecheck
+pnpm run lint
 pnpm dev all                   # 自分の repo を scan する
 pnpm dev diff                  # まだ git add していない変更だけを scan する
 pnpm dev diff --base origin/main  # このブランチの PR の差分だけを scan する
@@ -32,7 +33,7 @@ pnpm dev diff --base origin/main  # このブランチの PR の差分だけを 
 
 - 1 つの PR は 1 つの目的に絞り、300 行以内を目安にしてください
 - コードにコメントは書かず、「なぜそうしたか」はコミットメッセージに書いてください。何をしているかはコードで分かるようにします
-- `pnpm test` と `pnpm run typecheck` が通っていることを確認してください
+- `pnpm test` と `pnpm run typecheck` と `pnpm run lint` が通っていることを確認してください
 
 ## ドキュメントを変えるとき
 

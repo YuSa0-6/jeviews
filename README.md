@@ -352,8 +352,8 @@ TypeScript / JavaScript と Python のファイルでは、一部の観点を Je
 
 | ファイル | 道具 | 決める観点 |
 |---|---|---|
-| TypeScript / JavaScript | tsc（同梱） | `lint_unused_import` / `lint_unused_variable` / `lint_unused_param` |
-| TypeScript / JavaScript | fallow（同梱） | `complexity_branchy_function`。いちばん分岐の多い関数の複雑度が 8 以下なら `GOOD`、15 以上なら `NG`。その間は Jev に聞きます |
+| TypeScript / JavaScript | tsc（依存として入る） | `lint_unused_import` / `lint_unused_variable` / `lint_unused_param` |
+| TypeScript / JavaScript | fallow（依存として入る） | `complexity_branchy_function`。いちばん分岐の多い関数の複雑度が 8 以下なら `GOOD`、15 以上なら `NG`。その間は Jev に聞きます |
 | Python | 手元の python3 | `lint_unused_param` |
 
 道具が動かないとき（python3 が無い、構文エラーがあるなど）は、その観点も Jev に聞きます。
@@ -539,3 +539,15 @@ jq が無ければ、result.json を読んで同じ項目を拾います。
 ## License
 
 MIT License. Copyright (c) 2026 Yusa (YuSa0-6). 全文は [LICENSE](LICENSE) を参照してください。
+
+### 使っているツールとライセンス
+
+jeview は、次のパッケージを依存として入れて実行時に使います。どれも npm からインストールされ、jeview の `dist/` には含めていません。各ライセンスの全文は、インストールされたパッケージの中にあります。
+
+| パッケージ | 使いみち | ライセンス |
+|---|---|---|
+| [fallow](https://github.com/fallow-rs/fallow)（各 OS 用のバイナリ `@fallow-cli/*`、`fallow-type-aware` を含む） | TypeScript / JavaScript の関数の複雑度を測る | MIT |
+| [TypeScript](https://github.com/microsoft/TypeScript) | TypeScript / JavaScript の未使用の import・変数・引数を見つける | Apache-2.0 |
+| [AI SDK](https://github.com/vercel/ai)（`ai`、`@ai-sdk/gateway`、`@ai-sdk/provider-utils`、`@ai-sdk/typesafe-ai`） | Jev を呼ぶ | Apache-2.0 |
+| [@openrouter/ai-sdk-provider](https://github.com/OpenRouterTeam/ai-sdk-provider) | OpenRouter 経由で Jev を呼ぶ | Apache-2.0 |
+| [Zod](https://github.com/colinhacks/zod) | API の応答の形を確かめる | MIT |

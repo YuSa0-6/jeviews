@@ -34,7 +34,8 @@
     "eval:score": "node evals/scripts/score.mjs",
     "eval:diff": "node evals/scripts/diff.mjs",
     "eval:codex": "node evals/scripts/codex.mjs",
-    "eval:cascade": "node evals/scripts/cascade.mjs"
+    "eval:cascade": "node evals/scripts/cascade.mjs",
+    "eval:label": "node evals/scripts/label.mjs"
   },
   "dependencies": {
     "@ai-sdk/gateway": "4.0.88",

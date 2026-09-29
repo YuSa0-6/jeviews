@@ -1,0 +1,21 @@
+id	truth	note	jev	probability	checkId	looksFor	file	url
+1			NG	0.180	input_unchecked_use	外から読んだ値（コマンドライン引数・環境変数・通信の応答・ファイル）を、形を確かめずに数値・URL・パス・決まった選択肢として使っている	binding/binding.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/binding.go
+2			NG	0.260	input_missing_unhandled	外から読んだ値が無い・空のときも、あるものとして使い続けている	binding/form.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/form.go
+3			NG	0.230	input_unchecked_use	外から読んだ値（コマンドライン引数・環境変数・通信の応答・ファイル）を、形を確かめずに数値・URL・パス・決まった選択肢として使っている	binding/header.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/header.go
+4			GOOD	0.020	secret_logged	秘密の値をログ・標準出力・エラーメッセージに出している	binding/header.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/header.go
+5			GOOD	0.030	error_empty_catch	catch などでエラーを受け取り、記録も再送出も失敗の返却もせずに捨てている	binding/query.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/query.go
+6			NG	0.080	error_success_after_failure	処理が失敗したあとに、成功として返す・続ける	binding/toml.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/toml.go
+7			NG	0.400	input_unchecked_use	外から読んだ値（コマンドライン引数・環境変数・通信の応答・ファイル）を、形を確かめずに数値・URL・パス・決まった選択肢として使っている	binding/toml.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/toml.go
+8			NG	0.100	error_success_after_failure	処理が失敗したあとに、成功として返す・続ける	binding/xml.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/xml.go
+9			NG	0.280	input_unchecked_use	外から読んだ値（コマンドライン引数・環境変数・通信の応答・ファイル）を、形を確かめずに数値・URL・パス・決まった選択肢として使っている	binding/xml.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/binding/xml.go
+10			GOOD	0.010	error_unhandled_promise	Promise などの非同期処理の失敗を、await も処理もしていない	codec/json/api.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/codec/json/api.go
+11			GOOD	0.020	secret_logged	秘密の値をログ・標準出力・エラーメッセージに出している	deprecated.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/deprecated.go
+12			NG	0.170	error_success_after_failure	処理が失敗したあとに、成功として返す・続ける	ginS/gins.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/ginS/gins.go
+13			GOOD	0.110	input_missing_unhandled	外から読んだ値が無い・空のときも、あるものとして使い続けている	ginS/gins.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/ginS/gins.go
+14			GOOD	0.020	input_unchecked_use	外から読んだ値（コマンドライン引数・環境変数・通信の応答・ファイル）を、形を確かめずに数値・URL・パス・決まった選択肢として使っている	internal/bytesconv/bytesconv.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/internal/bytesconv/bytesconv.go
+15			GOOD	0.010	secret_hardcoded	API キー・パスワード・トークン・秘密鍵の値がそのまま書いてある	internal/fs/fs.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/internal/fs/fs.go
+16			GOOD	0.010	secret_hardcoded	API キー・パスワード・トークン・秘密鍵の値がそのまま書いてある	render/html.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/render/html.go
+17			NG	0.180	input_missing_unhandled	外から読んだ値が無い・空のときも、あるものとして使い続けている	routergroup.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/routergroup.go
+18			NG	0.200	input_missing_unhandled	外から読んだ値が無い・空のときも、あるものとして使い続けている	test_helpers.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/test_helpers.go
+19			GOOD	0.020	secret_hardcoded	API キー・パスワード・トークン・秘密鍵の値がそのまま書いてある	utils_test.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/utils_test.go
+20			GOOD	0.010	error_empty_catch	catch などでエラーを受け取り、記録も再送出も失敗の返却もせずに捨てている	version.go	https://github.com/gin-gonic/gin/blob/3b08cd7235bd5ad2f055aa9e38135f111f6c5926/version.go

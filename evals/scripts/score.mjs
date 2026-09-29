@@ -95,26 +95,31 @@ export function score(expected, output) {
 }
 
 function verdicts(output) {
-  const m = new Map();
+  const files = new Map(),
+    checks = new Map();
   for (const f of output.files) {
-    m.set(f.path, f.verdict);
-    for (const c of f.checks.filter((c) => c.applicable)) m.set(`${f.path}#${c.checkId}`, c.verdict);
+    files.set(f.path, f.verdict);
+    for (const c of f.checks.filter((c) => c.applicable)) checks.set(JSON.stringify([f.path, c.checkId]), c.verdict);
   }
-  return m;
+  return { files, checks };
+}
+
+function sameRate(a, b) {
+  let n = 0,
+    same = 0;
+  for (const [k, v] of a) {
+    if (!b.has(k)) continue;
+    n++;
+    if (b.get(k) === v) same++;
+  }
+  return div(same, n);
 }
 
 // 同じ質問版の 2 回の scan で、判定がどれだけそろうか。確率の揺れが判定を反転させる度合いを見る。
 export function agreement(a, b) {
   const va = verdicts(a),
     vb = verdicts(b);
-  const n = { files: 0, filesSame: 0, checks: 0, checksSame: 0 };
-  for (const [k, v] of va) {
-    if (!vb.has(k)) continue;
-    const kind = k.includes('#') ? 'checks' : 'files';
-    n[kind]++;
-    if (vb.get(k) === v) n[`${kind}Same`]++;
-  }
-  return { files: div(n.filesSame, n.files), checks: div(n.checksSame, n.checks) };
+  return { files: sameRate(va.files, vb.files), checks: sameRate(va.checks, vb.checks) };
 }
 
 const fmt = (x) => (x === null || x === undefined ? '  -  ' : (x * 100).toFixed(0).padStart(4) + '%');

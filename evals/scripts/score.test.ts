@@ -48,4 +48,18 @@ describe('agreement', () => {
     expect(r.files).toBeCloseTo(0.5);
     expect(r.checks).toBeCloseTo(1 / 3);
   });
+
+  it('keeps file and check verdicts apart when a path contains #', () => {
+    const a = { files: [
+      { path: 'a.ts', verdict: 'NG', checks: [check('lint_unused_import', 'NG')] },
+      { path: 'a.ts#lint_unused_import', verdict: 'GOOD', checks: [] },
+    ] };
+    const b = { files: [
+      { path: 'a.ts', verdict: 'NG', checks: [check('lint_unused_import', 'NG')] },
+      { path: 'a.ts#lint_unused_import', verdict: 'NG', checks: [] },
+    ] };
+    const r = agreement(a, b);
+    expect(r.files).toBeCloseTo(0.5);
+    expect(r.checks).toBe(1);
+  });
 });

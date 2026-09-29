@@ -542,12 +542,12 @@ MIT License. Copyright (c) 2026 Yusa (YuSa0-6). 全文は [LICENSE](LICENSE) を
 
 ### 使っているツールとライセンス
 
-jeview は、次のパッケージを依存として入れて実行時に使います。どれも npm からインストールされ、jeview の `dist/` には含めていません。各ライセンスの全文は、インストールされたパッケージの中にあります。
+jeview は、次のパッケージを依存として入れて実行時に使います。どれも npm からインストールされ、jeview の `dist/` には含めていません。各ライセンスの全文は、表のライセンス名のリンク先にあります。
 
 | パッケージ | 使いみち | ライセンス |
 |---|---|---|
-| [fallow](https://github.com/fallow-rs/fallow)（各 OS 用のバイナリ `@fallow-cli/*`、`fallow-type-aware` を含む） | TypeScript / JavaScript の関数の複雑度を測る | MIT |
-| [TypeScript](https://github.com/microsoft/TypeScript) | TypeScript / JavaScript の未使用の import・変数・引数を見つける | Apache-2.0 |
-| [AI SDK](https://github.com/vercel/ai)（`ai`、`@ai-sdk/gateway`、`@ai-sdk/provider-utils`、`@ai-sdk/typesafe-ai`） | Jev を呼ぶ | Apache-2.0 |
-| [@openrouter/ai-sdk-provider](https://github.com/OpenRouterTeam/ai-sdk-provider) | OpenRouter 経由で Jev を呼ぶ | Apache-2.0 |
-| [Zod](https://github.com/colinhacks/zod) | API の応答の形を確かめる | MIT |
+| [fallow](https://github.com/fallow-rs/fallow)（各 OS 用のバイナリ `@fallow-cli/*`、`fallow-type-aware` を含む） | TypeScript / JavaScript の関数の複雑度を測る | [MIT](https://github.com/fallow-rs/fallow/blob/main/LICENSE) |
+| [TypeScript](https://github.com/microsoft/TypeScript) | TypeScript / JavaScript の未使用の import・変数・引数を見つける | [Apache-2.0](https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt) |
+| [AI SDK](https://github.com/vercel/ai)（`ai`、`@ai-sdk/gateway`、`@ai-sdk/provider-utils`、`@ai-sdk/typesafe-ai`） | Jev を呼ぶ | [Apache-2.0](https://github.com/vercel/ai/blob/main/LICENSE) |
+| [@openrouter/ai-sdk-provider](https://github.com/OpenRouterTeam/ai-sdk-provider) | OpenRouter 経由で Jev を呼ぶ | [Apache-2.0](https://github.com/OpenRouterTeam/ai-sdk-provider/blob/main/LICENSE) |
+| [Zod](https://github.com/colinhacks/zod) | API の応答の形を確かめる | [MIT](https://github.com/colinhacks/zod/blob/main/LICENSE) |

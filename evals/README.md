@@ -11,6 +11,7 @@ Jev の判定精度を、言語ごとの大きめの OSS に対して測り、�
 | `<repo>/<subset>.files.txt` | 抽出したファイル一覧。再抽出しなくても同じ集合で scan できる | する |
 | `<repo>/<subset>.expected.json` | 観点ごとの期待値（problem / clean）と出所（tsc / rubocop / ruff / gofmt / human） | する |
 | `<repo>/<subset>.human.json` | 人が付けた期待値。`teacher.mjs` を再実行しても消えない | する |
+| `<repo>/<subset>.label.tsv` | `human.json` の元になる記入表。`label.mjs sheet` が作り、人が `truth` 列を埋める | する |
 | `<repo>/<subset>.codex.json` | Codex（gpt-6-astra）のレビューから写した期待値。problem だけ。`codex.mjs` が作る | する |
 | `<repo>/results/<subset>.<questionVersion>.r<N>.json` | scan の生の結果 | する |
 | `history.jsonl` | 採点結果の履歴（1 行 1 scan） | する |
@@ -28,6 +29,8 @@ pnpm eval:score <repo> <subset> [latest|all] [record|dry]   # 採点して histo
 pnpm eval:diff <repo> <subset>          # 食い違い (fp / fn) を一覧する
 pnpm eval:codex <repo> <subset> <file>  # codex exec の出力を期待値 (problem のみ) に写す
 pnpm eval:cascade <subset> [repo...]    # Jev を LLM の前段に置いたときの、LLM に回す量と残る problem を数える
+pnpm eval:label sheet <repo> <subset>   # 人が正解を付ける記入表 <subset>.label.tsv を作る
+pnpm eval:label apply <repo> <subset>   # 記入済みの表を human.json と expected.json に写す
 ```
 
 ## 部分集合
@@ -51,6 +54,19 @@ repo ごとに `tune` と `holdout` の 2 つを、ファイルパスのハッ�
 error_empty_catch は道具が「問題あり」と言ったものだけを使います。rubocop / ruff の「空の rescue / except」は Jeviews の問い（握りつぶし）より狭いので、道具の clean を clean とは扱いません。
 
 入力検証、エラー処理の大半、秘密情報の観点には道具の正解がありません。Codex（gpt-6-astra）に Jeviews と同じ質問を投げたレビュー結果を `codex.json` に写し、「問題あり」だけを正解にします。レビューは網羅的ではないので、書かれていないファイルを clean とは扱いません。`human.json` に人が書いたものは最優先です。
+
+## 人が正解を付ける
+
+意味を読む観点（入力検証・エラー処理・秘密情報）には道具の正解がなく、Codex の正解も「問題あり」だけです。このままでは誤報を数えられないので、人が「問題あり / なし」の両方を付けます。
+
+| 手順 | やること |
+| --- | --- |
+| 1 | `pnpm eval:label sheet <repo> holdout` で記入表を作る。最新の質問版の r1 から、正解の無い「ファイル × 観点」を Jev が NG と言った組 10、GOOD と言った組 10 選ぶ |
+| 2 | 表の `url` でファイルを開き、`looksFor` に当てはまる箇所があれば `truth` に `problem`、無ければ `clean` と書く。迷う組は空のままにする。`note` には根拠の行などを書く |
+| 3 | `pnpm eval:label apply <repo> holdout` で `human.json` と `expected.json` に写す |
+| 4 | `pnpm eval:score <repo> holdout all dry` で採点し直す。意味を読む観点の fp / tn が数えられるようになる |
+
+Jev の判定（`jev` 列）を先に見ると引きずられるので、判定を付け終わるまで `jev` と `probability` の列は隠して読むのがおすすめです。
 
 ## 採点
 

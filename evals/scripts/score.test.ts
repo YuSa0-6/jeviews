@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { score } from './score.mjs';
+import { agreement, score } from './score.mjs';
 
 const check = (checkId, verdict, reason) => ({ checkId, applicable: true, verdict, ...(reason ? { reason } : {}) });
 const na = (checkId) => ({ checkId, applicable: false, verdict: null });
@@ -31,5 +31,35 @@ describe('score', () => {
     const s = score({ files: {} }, { files: [{ path: 'x', verdict: null, checks: [na('lint_unused_import')] }] });
     expect(s.covered).toBe(0);
     expect(s.known).toBe(0);
+  });
+});
+
+describe('agreement', () => {
+  it('compares file and applicable check verdicts between two runs', () => {
+    const a = { files: [
+      { path: 'a.ts', verdict: 'NG', checks: [check('lint_unused_import', 'NG'), check('error_empty_catch', 'GOOD')] },
+      { path: 'b.ts', verdict: 'GOOD', checks: [check('lint_unused_import', 'GOOD'), na('error_empty_catch')] },
+    ] };
+    const b = { files: [
+      { path: 'a.ts', verdict: 'NG', checks: [check('lint_unused_import', 'NG'), check('error_empty_catch', 'NG')] },
+      { path: 'b.ts', verdict: 'NG', checks: [check('lint_unused_import', 'NG'), na('error_empty_catch')] },
+    ] };
+    const r = agreement(a, b);
+    expect(r.files).toBeCloseTo(0.5);
+    expect(r.checks).toBeCloseTo(1 / 3);
+  });
+
+  it('keeps file and check verdicts apart when a path contains #', () => {
+    const a = { files: [
+      { path: 'a.ts', verdict: 'NG', checks: [check('lint_unused_import', 'NG')] },
+      { path: 'a.ts#lint_unused_import', verdict: 'GOOD', checks: [] },
+    ] };
+    const b = { files: [
+      { path: 'a.ts', verdict: 'NG', checks: [check('lint_unused_import', 'NG')] },
+      { path: 'a.ts#lint_unused_import', verdict: 'NG', checks: [] },
+    ] };
+    const r = agreement(a, b);
+    expect(r.files).toBeCloseTo(0.5);
+    expect(r.checks).toBe(1);
   });
 });

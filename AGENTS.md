@@ -9,10 +9,11 @@ Jev だけでリポジトリ全体をコードレビューする CLI です。
 | 依存を入れる | `pnpm install` |
 | テスト | `pnpm test` |
 | 型検査 | `pnpm run typecheck` |
+| lint | `pnpm run lint` |
 | ビルド | `pnpm run build` |
 | 手元で動かす | `pnpm dev all` |
 
-CI は `typecheck` / `test` / `build` の 3 つを実行します。commit 前にこの 3 つを通してください。
+CI は `typecheck` / `lint` / `test` / `build` の 4 つを実行します。commit 前にこの 4 つを通してください。
 
 <!-- fallow:setup-hooks:start -->
 ## Fallow local gate
